@@ -5,10 +5,11 @@ import org.junit.Test;
 
 public class TestOne {
 
-  @Test
+    @Test
 	public void testOne() {
 		
 		try {
+			new Extractor().extractOldTrade();
 			
 		} catch (Exception e) {
 			throw new AssertionError(e);
