@@ -27,6 +27,9 @@ public class Extractor {
 		return client;
 	}
 	
+	/**
+	 * Default header for candleStick
+	 */
 	public static final String[] candleStickHeader = new String[] {
 			"openTime", "open", "high", "low", "close", "closeTime", "volume", 
 			"quoteAssetVolume", "numberOfTrades", "takerBuyBaseAssetVolume", "takerBuyQuoteAssetVolume"};
@@ -35,17 +38,15 @@ public class Extractor {
 	 * @param os
 	 * @param symbol
 	 * @param interval
+	 * @throws IOException 
 	 */
-	public void extractKlines(Appendable outputStream, CSVFormat csvFormat, String symbol, CandlestickInterval interval) {
-		try {
-			
-			
-			List<Candlestick> candles = getRestClient().getCandlestickBars(symbol, interval);
-			
-			CSVPrinter csvPrinter = new CSVPrinter(outputStream, csvFormat.withHeader(candleStickHeader));
-			
-			candles.forEach(candle->{
-				try {
+	public void extractKlines(Appendable outputStream, CSVFormat csvFormat, String symbol, CandlestickInterval interval) throws IOException {
+		
+		List<Candlestick> candles = getRestClient().getCandlestickBars(symbol, interval);
+		
+		try(CSVPrinter csvPrinter = new CSVPrinter(outputStream, csvFormat.withHeader(candleStickHeader));){
+		
+			for(Candlestick candle : candles)
 					csvPrinter.printRecord(
 							candle.getOpenTime().toString(),
 							candle.getOpen(),
@@ -59,15 +60,7 @@ public class Extractor {
 							candle.getTakerBuyBaseAssetVolume(),
 							candle.getTakerBuyQuoteAssetVolume()
 							);
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
-			});
-			
-			int i = 0;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }
