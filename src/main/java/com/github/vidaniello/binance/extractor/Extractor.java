@@ -18,6 +18,10 @@ public class Extractor {
 	//List<TradeHistoryItem> trades = client.getHistoricalTrades("INJBUSD", null, 0l);
 	
 	private BinanceApiRestClient client;
+	/**
+	 * If the system properties, 'apikey' and 'secret' are inserted in command line, the client can call login reserved function.
+	 * @return
+	 */
 	private BinanceApiRestClient getRestClient() {
 		if(client==null) {
 			String apiKey = System.getProperty("apikey");
